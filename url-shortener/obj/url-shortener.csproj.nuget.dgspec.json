@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lucas\\Desktop\\url-shortener\\url-shortener\\url-shortener.csproj": {}
+    "C:\\Users\\Lucas\\Desktop\\projects\\url-shortener\\url-shortener-backend\\url-shortener\\url-shortener.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lucas\\Desktop\\url-shortener\\url-shortener\\url-shortener.csproj": {
+    "C:\\Users\\Lucas\\Desktop\\projects\\url-shortener\\url-shortener-backend\\url-shortener\\url-shortener.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lucas\\Desktop\\url-shortener\\url-shortener\\url-shortener.csproj",
+        "projectUniqueName": "C:\\Users\\Lucas\\Desktop\\projects\\url-shortener\\url-shortener-backend\\url-shortener\\url-shortener.csproj",
         "projectName": "url-shortener",
-        "projectPath": "C:\\Users\\Lucas\\Desktop\\url-shortener\\url-shortener\\url-shortener.csproj",
+        "projectPath": "C:\\Users\\Lucas\\Desktop\\projects\\url-shortener\\url-shortener-backend\\url-shortener\\url-shortener.csproj",
         "packagesPath": "C:\\Users\\Lucas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lucas\\Desktop\\url-shortener\\url-shortener\\obj\\",
+        "outputPath": "C:\\Users\\Lucas\\Desktop\\projects\\url-shortener\\url-shortener-backend\\url-shortener\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,6 +45,24 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
