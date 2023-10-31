@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using url_shortener.Data.Entities;
+using url_shortener.Helpers;
 
 namespace url_shortener.Data
 {
@@ -10,39 +11,36 @@ namespace url_shortener.Data
         public UrlShortenerContext(DbContextOptions<UrlShortenerContext> dbContextOptions) : base(dbContextOptions) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasData(
-                    new User()
-                    {
-                        Id = 1,
-                        Username = "elpapu",
-                        Email = "elpapu@mail.com",
-                        Password = "elpapumisterioso"
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Username = "chimba",
-                        Email = "chimba@mail.com",
-                        Password = "123456"
-                    }
-                );
-            modelBuilder.Entity<Url>()
-                .HasData(
-                    new Url()
-                    {
-                        Id = 1,
-                        FullUrl = "https://google.com",
-                        ShortUrl = "asiubfga",
-                        Clicks = 999999,
-                        UserId = 1
-                    }
-                );
-            modelBuilder.Entity<User>()
-                .HasMany(us => us.Urls);
+            User admin = new User()
+            {
+                Id = 1,
+                Username = "Admin",
+                Email = "admin@mail.com",
+                PasswordHash = PasswordHashing.GetPasswordHash("admin"),
+                Role = Models.Eums.RoleEnum.Admin
+            };
 
-            modelBuilder.Entity<Url>()
-                .HasOne(url => url.User);
+            Url url = new Url()
+            {
+                Id = 1,
+                FullUrl = "https://google.com",
+                ShortUrl = Shortener.GetShortUrl(),
+                Clicks = 0,
+                UserId = 1
+            };
+
+            modelBuilder.Entity<User>(user =>
+            {
+                user.HasData(admin);
+                user.HasMany(us => us.Urls);
+            });
+
+            /*
+            modelBuilder.Entity<Url>(url =>
+            {
+                url.HasData(url);
+            });
+            */
 
             base.OnModelCreating(modelBuilder);
         }

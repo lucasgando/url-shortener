@@ -108,3 +108,7 @@ C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortene
 C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\obj\Debug\net6.0\url-shortener.pdb
 C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\obj\Debug\net6.0\url-shortener.genruntimeconfig.cache
 C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\obj\Debug\net6.0\ref\url-shortener.dll
+C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Lucas\Desktop\projects\url-shortener\url-shortener-backend\url-shortener\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll

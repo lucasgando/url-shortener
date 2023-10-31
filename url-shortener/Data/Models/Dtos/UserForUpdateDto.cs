@@ -1,10 +1,12 @@
-﻿namespace url_shortener.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace url_shortener.Data.Models.Dtos
 {
-    public class UserDto
+    public class UserForUpdateDto
     {
         public string Username { get; set; }
+        [EmailAddress]
         public string Email { get; set; }
         public string Password { get; set; }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using url_shortener.Data.Models.Eums;
 
 namespace url_shortener.Data.Entities
 {
@@ -13,7 +14,8 @@ namespace url_shortener.Data.Entities
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
-        public List<Url> Urls { get; set; } 
+        public string PasswordHash { get; set; }
+        public RoleEnum Role { get; set; } = RoleEnum.User;
+        public List<Url> Urls { get; set; }
     }
 }

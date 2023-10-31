@@ -14,7 +14,9 @@ namespace url_shortener.Data.Entities
         public string ShortUrl { get; set; }
         public int Clicks { get; set; } = 0;
         public int UserId { get; set; }
+        /*
         [ForeignKey("UserId")]
         public User User { get; set; }
+        */
     }
 }

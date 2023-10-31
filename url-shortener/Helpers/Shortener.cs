@@ -2,8 +2,8 @@
 {
     public static class Shortener
     {
-        private static char[] Alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ12345789".ToCharArray();
-        private static int Base = 62;
+        private static char[] Alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".ToCharArray();
+        private static int Base = Alphabet.Length;
         public static string GetShortUrl()
         {
             Random random = new Random();

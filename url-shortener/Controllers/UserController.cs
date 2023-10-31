@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using url_shortener.Data.Entities;
-using url_shortener.Data.Models;
+using url_shortener.Data.Models.Dtos;
 using url_shortener.Services;
 
 namespace url_shortener.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserService _service;
@@ -12,29 +16,40 @@ namespace url_shortener.Controllers
         {
             _service = service;
         }
-        [HttpGet("users")]
-        public IActionResult GetUsers()
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            return Ok(_service.GetUsers());
+            return Ok(_service.GetAll());
         }
-        [HttpGet("users/{id}")]
-        public IActionResult GetUserById(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            User? user = _service.GetUser(id);
+            User? user = _service.GetById(id);
             if (user != null)
                 return Ok(user);
             return NotFound("User not found");
         }
-        [HttpPost("user")]
-        public IActionResult CreateUser([FromBody] UserDto dto)
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Create([FromBody] UserForCreationDto dto)
         {
-            User userToCreate = new User()
-            {
-                Username = dto.Username,
-                Email = dto.Email,
-                Password = dto.Password
-            };
-            return Ok(_service.AddUser(userToCreate));
+            _service.Add(dto);
+            return Ok();
+        }
+        [HttpPut]
+        public IActionResult Update([FromBody] UserForUpdateDto dto)
+        {
+            if (!_service.Exists(dto.Email)) return NotFound("User not found");
+            _service.Update(dto);
+            return Ok();
+        }
+        [HttpDelete]
+        public IActionResult Delete([FromBody] UserForDeletionDto dto)
+        {
+            if (!_service.Exists(dto.Email)) return NotFound("User not found");
+            bool result = _service.Delete(dto);
+            if (result) return Ok();
+            return BadRequest();
         }
     }
 }

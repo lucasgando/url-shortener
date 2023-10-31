@@ -1,6 +1,6 @@
 ﻿using url_shortener.Data;
 using url_shortener.Data.Entities;
-using url_shortener.Data.Models;
+using url_shortener.Data.Models.Dtos;
 using url_shortener.Helpers;
 
 namespace url_shortener.Services
@@ -12,23 +12,23 @@ namespace url_shortener.Services
         {
             _context = context;
         }
-        public List<Url> GetUrls()
+        public List<Url> GetAll()
         {
             return _context.Urls.ToList();
         }
-        public Url? GetUrl(int id)
+        public Url? GetById(int id)
         {
             return _context.Urls.SingleOrDefault(url => url.Id == id);
         }
-        public Url? GetUrlByCode(string shortUrl)
+        public Url? GetByCode(string shortUrl)
         {
             return _context.Urls.SingleOrDefault(url => url.ShortUrl == shortUrl);
         }
-        public int AddUrl(UrlDto url)
+        public int Add(UrlForCreationDto url)
         {
             Url newUrl = new Url()
             {
-                FullUrl = url.FullUrl,
+                FullUrl = url.Url,
                 ShortUrl = Shortener.GetShortUrl(),
                 UserId = url.UserId
             };
@@ -36,32 +36,27 @@ namespace url_shortener.Services
             _context.SaveChanges();
             return newUrl.Id;
         }
-        public bool DelUrl(int id)
+        public bool Delete(int id)
         {
-            Url? urlToDel = GetUrl(id);
-            if (urlToDel != null)
-            {
-                _context.Urls.Remove(urlToDel);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            Url? urlToDel = GetById(id);
+            if (urlToDel == null) return false;
+            _context.Urls.Remove(urlToDel);
+            _context.SaveChanges();
+            return true;
         }
         public bool UpdateClicks(int id)
         {
-            Url? urlToUpd = GetUrl(id);
-            if (urlToUpd != null)
-            {
-                urlToUpd.Clicks++;
-                _context.Urls.Update(urlToUpd);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            Url? urlToUpd = GetById(id);
+            if (urlToUpd == null) return false;
+            urlToUpd.Clicks++;
+            _context.Urls.Update(urlToUpd);
+            _context.SaveChanges();
+            return true;
+            
         }
-        public bool UpdateShortUrl(int id)
+        public bool Update(int id)
         { 
-            Url? urlToUpd = GetUrl(id);
+            Url? urlToUpd = GetById(id);
             if (urlToUpd != null)
             {
                 urlToUpd.ShortUrl = Shortener.GetShortUrl();

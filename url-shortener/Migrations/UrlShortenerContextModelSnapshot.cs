@@ -41,16 +41,6 @@ namespace url_shortener.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Urls");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Clicks = 999999,
-                            FullUrl = "https://google.com",
-                            ShortUrl = "asiubfga",
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("url_shortener.Data.Entities.User", b =>
@@ -63,9 +53,12 @@ namespace url_shortener.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -79,28 +72,20 @@ namespace url_shortener.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "elpapu@mail.com",
-                            Password = "elpapumisterioso",
-                            Username = "elpapu"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "chimba@mail.com",
-                            Password = "123456",
-                            Username = "chimba"
+                            Email = "admin@mail.com",
+                            PasswordHash = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+                            Role = 1,
+                            Username = "Admin"
                         });
                 });
 
             modelBuilder.Entity("url_shortener.Data.Entities.Url", b =>
                 {
-                    b.HasOne("url_shortener.Data.Entities.User", "User")
+                    b.HasOne("url_shortener.Data.Entities.User", null)
                         .WithMany("Urls")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("url_shortener.Data.Entities.User", b =>

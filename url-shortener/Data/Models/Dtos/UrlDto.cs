@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace url_shortener.Data.Models
+namespace url_shortener.Data.Models.Dtos
 {
     public class UrlDto
     {
