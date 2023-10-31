@@ -16,6 +16,10 @@ namespace url_shortener.Services
         {
             return _context.Urls.ToList();
         }
+        public List<Url> GetByUserId(int id)
+        {
+            return _context.Urls.Where(url => url.UserId == id).ToList();
+        }
         public Url? GetById(int id)
         {
             return _context.Urls.SingleOrDefault(url => url.Id == id);
@@ -24,13 +28,13 @@ namespace url_shortener.Services
         {
             return _context.Urls.SingleOrDefault(url => url.ShortUrl == shortUrl);
         }
-        public int Add(UrlForCreationDto url)
+        public int Add(UrlForCreationDto url, int userId)
         {
             Url newUrl = new Url()
             {
                 FullUrl = url.Url,
                 ShortUrl = Shortener.GetShortUrl(),
-                UserId = url.UserId
+                UserId = userId
             };
             _context.Urls.Add(newUrl);
             _context.SaveChanges();

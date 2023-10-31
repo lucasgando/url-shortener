@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using url_shortener.Data.Entities;
 using url_shortener.Data.Models.Dtos;
 using url_shortener.Services;
@@ -19,11 +20,15 @@ namespace url_shortener.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            if (userRole != "Admin") return Forbid();
             return Ok(_service.GetAll());
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            if (userRole != "Admin") return Forbid();
             User? user = _service.GetById(id);
             if (user != null)
                 return Ok(user);
@@ -39,13 +44,18 @@ namespace url_shortener.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] UserForUpdateDto dto)
         {
-            if (!_service.Exists(dto.Email)) return NotFound("User not found");
+            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            string email = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)!.Value;
+            if (userRole != "Admin" || email != dto.Email) return Forbid();
             _service.Update(dto);
             return Ok();
         }
         [HttpDelete]
         public IActionResult Delete([FromBody] UserForDeletionDto dto)
         {
+            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            string email = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)!.Value;
+            if (userRole != "Admin" || email != dto.Email) return Forbid();
             if (!_service.Exists(dto.Email)) return NotFound("User not found");
             bool result = _service.Delete(dto);
             if (result) return Ok();

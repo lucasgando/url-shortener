@@ -7,7 +7,5 @@ namespace url_shortener.Data.Models.Dtos
         [Required]
         [Url]
         public string Url { get; set; }
-        [Required]
-        public int UserId { get; set; }
     }
 }
