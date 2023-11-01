@@ -20,14 +20,14 @@ namespace url_shortener.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             if (userRole != "Admin") return Forbid();
             return Ok(_service.GetAll());
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             if (userRole != "Admin") return Forbid();
             UserDto? user = _service.GetById(id);
             if (user is not null) return Ok(user);
@@ -43,8 +43,9 @@ namespace url_shortener.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] UserForUpdateDto dto)
         {
-            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
-            string email = User.Claims.FirstOrDefault(claim => claim.Type.Contains("email"))!.Value;
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
+            string email = User.Claims.First(claim => claim.Type.Contains("email")).Value;
+            Console.WriteLine(userRole);
             if (userRole != "Admin" || email != dto.Email) return Forbid();
             _service.Update(dto);
             return Ok();
@@ -52,13 +53,13 @@ namespace url_shortener.Controllers
         [HttpDelete]
         public IActionResult Delete([FromBody] UserForDeletionDto dto)
         {
-            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
-            string email = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)!.Value;
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
+            string email = User.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            Console.WriteLine("Delete used by:", userRole);
             if (userRole != "Admin" || email != dto.Email) return Forbid();
             if (!_service.Exists(dto.Email)) return NotFound("User not found");
-            bool result = _service.Delete(dto);
-            if (result) return Ok();
-            return BadRequest();
+            _service.Delete(dto);
+            return Ok();
         }
     }
 }

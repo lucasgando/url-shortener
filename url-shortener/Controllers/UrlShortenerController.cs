@@ -13,15 +13,15 @@ namespace url_shortener.Controllers
     public class UrlShortenerController : Controller
     {
         private readonly UrlService _service;
-        private readonly UserService _userService;
-        public UrlShortenerController(UrlService urlService, UserService userService)
+        public UrlShortenerController(UrlService urlService)
         {
-            _userService = userService;
             _service = urlService;
         }
         [HttpGet("admin/urls")]
         public IActionResult GetUrls()
         {
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
+            if (userRole is not "Admin") return Forbid();
             return Ok(_service.GetAll());
         }
         [HttpGet("admin/urls/{id}")]

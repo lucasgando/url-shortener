@@ -68,39 +68,19 @@ namespace url_shortener.Services
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }
-        public bool Update(UserForUpdateDto dto)
+        public void Update(UserForUpdateDto dto)
         {
-            UserDto? oldUser = GetByEmail(dto.Email);
-            if (oldUser is null) return false;
-            User updatedUser = new User()
-            {
-                Id = oldUser.Id,
-                Username = oldUser.Username,
-                PasswordHash = oldUser.PasswordHash,
-                Email = oldUser.Email,
-                Role = oldUser.Role
-            };
-            if (dto.Username is not null) updatedUser.Username = dto.Username;
-            if (dto.Email is not null) updatedUser.Email = dto.Email;
-            if (dto.Password is not null) updatedUser.PasswordHash = dto.Password;
-            _context.Users.Update(updatedUser);
+            User user = _context.Users.Single(u => u.Email == dto.Email.ToLower());
+            user.Username = dto.Username;
+            user.Email = dto.Email;
+            user.PasswordHash = PasswordHashing.GetPasswordHash(dto.Password);
             _context.SaveChanges();
-            return true;
         }
-        public bool Delete(UserForDeletionDto dto)
+        public void Delete(UserForDeletionDto dto)
         {
-            UserDto userToDelete = GetByEmail(dto.Email)!;
-            User user = new User()
-            {
-                Id = userToDelete.Id,
-                Username = userToDelete.Username,
-                PasswordHash = userToDelete.PasswordHash,
-                Email = userToDelete.Email,
-                Role = userToDelete.Role
-            };
-            _context.Users.Remove(user);
+            User userToDelete = _context.Users.Single(u => u.Email == dto.Email);
+            _context.Users.Remove(userToDelete);
             _context.SaveChanges();
-            return true;
         }
     }
 }
