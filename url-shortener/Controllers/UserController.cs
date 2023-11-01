@@ -46,7 +46,6 @@ namespace url_shortener.Controllers
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             string email = User.Claims.First(claim => claim.Type.Contains("email")).Value;
-            Console.WriteLine(userRole);
             if (userRole != "Admin" && email != dto.Email) return Forbid();
             _service.Update(dto);
             return NoContent();
@@ -55,8 +54,7 @@ namespace url_shortener.Controllers
         public IActionResult Delete([FromBody] UserForDeletionDto dto)
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
-            string email = User.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-            Console.WriteLine("Delete used by:", userRole);
+            string email = User.Claims.First(claim => claim.Type.Contains("email")).Value;
             if (userRole != "Admin" && email != dto.Email) return Forbid();
             if (!_service.Exists(dto.Email)) return NotFound("User not found");
             _service.Delete(dto);
