@@ -29,9 +29,8 @@ namespace url_shortener.Controllers
         {
             string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
             if (userRole != "Admin") return Forbid();
-            User? user = _service.GetById(id);
-            if (user != null)
-                return Ok(user);
+            UserDto? user = _service.GetById(id);
+            if (user is not null) return Ok(user);
             return NotFound("User not found");
         }
         [HttpPost]
@@ -45,7 +44,7 @@ namespace url_shortener.Controllers
         public IActionResult Update([FromBody] UserForUpdateDto dto)
         {
             string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
-            string email = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)!.Value;
+            string email = User.Claims.FirstOrDefault(claim => claim.Type.Contains("email"))!.Value;
             if (userRole != "Admin" || email != dto.Email) return Forbid();
             _service.Update(dto);
             return Ok();

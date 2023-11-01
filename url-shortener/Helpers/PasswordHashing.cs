@@ -13,13 +13,5 @@ namespace url_shortener.Helpers
                 hashedPassword.Append(theByte.ToString("x2"));
             return hashedPassword.ToString();
         }
-        /*
-        public static string GetHash(string word)
-        {
-            var inputBytes = Encoding.UTF8.GetBytes(word);
-            var inputHash = SHA256.HashData(inputBytes);
-            return Convert.ToHexString(inputHash);
-        }
-        */
     }
 }

@@ -12,33 +12,56 @@ namespace url_shortener.Services
         {
             _context = urlShortenerContext;
         }
-        public List<User> GetAll()
+        public IEnumerable<UserDto> GetAll()
         {
-            return _context.Users.ToList();  
+            return _context.Users.Select(u => new UserDto()
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                PasswordHash = u.PasswordHash,
+                Role = u.Role,
+            }).ToList();
         }
-        public User? GetById(int id)
+        public UserDto? GetById(int id)
         {
-            return _context.Users.SingleOrDefault(user => user.Id == id);
+            User? user = _context.Users.SingleOrDefault(user => user.Id == id);
+            return user is null ? null : new UserDto()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                PasswordHash = user.PasswordHash,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
-        public User? GetByEmail(string email)
+        public UserDto? GetByEmail(string email)
         {
-            return _context.Users.SingleOrDefault(user => user.Email == email.ToLower());
+            User? user = _context.Users.SingleOrDefault(user => user.Email == email.ToLower());
+            return user is null ? null : new UserDto()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                PasswordHash = user.PasswordHash,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
         public bool Authenticate(string email, string password)
         {
-            User? user = GetByEmail(email);
+            UserDto? user = GetByEmail(email);
             if (user == null) return false;
             return user.PasswordHash == PasswordHashing.GetPasswordHash(password);
         }
         public bool Exists(string email)
         {
-            return GetByEmail(email.ToLower()) != null;
+            return GetByEmail(email.ToLower()) is not null;
         }
         public void Add(UserForCreationDto dto)
         {
             User newUser = new User()
             {
-                Username = dto.Username.ToLower(),
+                Username = dto.Username,
                 Email = dto.Email.ToLower(),
                 PasswordHash = PasswordHashing.GetPasswordHash(dto.Password)
             };
@@ -47,21 +70,35 @@ namespace url_shortener.Services
         }
         public bool Update(UserForUpdateDto dto)
         {
-            User? userToUpdate = GetByEmail(dto.Email);
-            if (userToUpdate == null) return false;
-            if (dto.Username != null) userToUpdate.Username = dto.Username;
-            if (dto.Email != null) userToUpdate.Email = dto.Email;
-            if (dto.Password != null) userToUpdate.PasswordHash = dto.Password;
-            _context.Users.Update(userToUpdate);
+            UserDto? oldUser = GetByEmail(dto.Email);
+            if (oldUser is null) return false;
+            User updatedUser = new User()
+            {
+                Id = oldUser.Id,
+                Username = oldUser.Username,
+                PasswordHash = oldUser.PasswordHash,
+                Email = oldUser.Email,
+                Role = oldUser.Role
+            };
+            if (dto.Username is not null) updatedUser.Username = dto.Username;
+            if (dto.Email is not null) updatedUser.Email = dto.Email;
+            if (dto.Password is not null) updatedUser.PasswordHash = dto.Password;
+            _context.Users.Update(updatedUser);
             _context.SaveChanges();
             return true;
         }
         public bool Delete(UserForDeletionDto dto)
         {
-            if (!Authenticate(dto.Email, dto.Password)) return false;
-            User? userToDelete = GetByEmail(dto.Email);
-            if (userToDelete == null) return false;
-            _context.Users.Remove(userToDelete);
+            UserDto userToDelete = GetByEmail(dto.Email)!;
+            User user = new User()
+            {
+                Id = userToDelete.Id,
+                Username = userToDelete.Username,
+                PasswordHash = userToDelete.PasswordHash,
+                Email = userToDelete.Email,
+                Role = userToDelete.Role
+            };
+            _context.Users.Remove(user);
             _context.SaveChanges();
             return true;
         }

@@ -41,6 +41,16 @@ namespace url_shortener.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Urls");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Clicks = 0,
+                            FullUrl = "https://google.com",
+                            ShortUrl = "K6TX7ebl",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("url_shortener.Data.Entities.User", b =>

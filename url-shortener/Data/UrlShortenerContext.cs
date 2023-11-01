@@ -35,12 +35,10 @@ namespace url_shortener.Data
                 user.HasMany(us => us.Urls);
             });
 
-            /*
-            modelBuilder.Entity<Url>(url =>
+            modelBuilder.Entity<Url>(u =>
             {
-                url.HasData(url);
+                u.HasData(url);
             });
-            */
 
             base.OnModelCreating(modelBuilder);
         }

@@ -21,21 +21,22 @@ namespace url_shortener.Controllers
             _service = service;
         }
         [HttpPost]
-        public IActionResult Authenticate([FromBody] AuthenticationDto dto)
+        public IActionResult Authenticate([FromBody] CredentialsDto dto)
         {
-            User? user = _service.GetByEmail(dto.Email);
+            UserDto? user = _service.GetByEmail(dto.Email);
             if (user is null) return Unauthorized();
             if(!_service.Authenticate(dto.Email, dto.Password)) return Unauthorized();
 
-            SymmetricSecurityKey securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"]));
+            SymmetricSecurityKey securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"]!));
             SigningCredentials credentials = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256Signature);
 
             List<Claim> claimsForToken = new List<Claim>();
-            claimsForToken.Add(new Claim("sub", user.Id.ToString()));
+            // standard claim names
+            claimsForToken.Add(new Claim("sub", user.Id.ToString())); // sub == identity
             claimsForToken.Add(new Claim("given_email", user.Email));
             claimsForToken.Add(new Claim("role", user.Role.ToString()));
 
-            var jwtSecurityToken = new JwtSecurityToken(
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
                 _config["Authentication:Issuer"],
                 _config["Authentication:Audience"],
                 claimsForToken,

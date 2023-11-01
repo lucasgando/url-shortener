@@ -5,7 +5,7 @@
 namespace url_shortener.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class Stable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,7 @@ namespace url_shortener.Migrations
             migrationBuilder.InsertData(
                 table: "Urls",
                 columns: new[] { "Id", "Clicks", "FullUrl", "ShortUrl", "UserId" },
-                values: new object[] { 1, 0, "https://google.com", "Q9A5iFta", 1 });
+                values: new object[] { 1, 0, "https://google.com", "K6TX7ebl", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Urls_UserId",

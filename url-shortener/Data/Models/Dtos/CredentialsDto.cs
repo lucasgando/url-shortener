@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace url_shortener.Data.Models.Dtos
 {
-    public class AuthenticationDto
+    public class CredentialsDto
     {
         [Required]
         [EmailAddress]

@@ -10,8 +10,8 @@ using url_shortener.Data;
 namespace url_shortener.Migrations
 {
     [DbContext(typeof(UrlShortenerContext))]
-    [Migration("20231031172331_CycleErrorTest1")]
-    partial class CycleErrorTest1
+    [Migration("20231101220215_Stable")]
+    partial class Stable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace url_shortener.Migrations
                             Id = 1,
                             Clicks = 0,
                             FullUrl = "https://google.com",
-                            ShortUrl = "MVtGzxxI",
+                            ShortUrl = "K6TX7ebl",
                             UserId = 1
                         });
                 });
