@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using url_shortener.Data.Entities;
 using url_shortener.Data.Models.Dtos;
 using url_shortener.Services;
 
@@ -17,18 +16,18 @@ namespace url_shortener.Controllers
         {
             _service = service;
         }
-        [HttpGet]
+        [HttpGet("admin/users")]
         public IActionResult GetAll()
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
-            if (userRole != "Admin") return Forbid();
+            if (userRole != "Admin") return Forbid("Unauthorized");
             return Ok(_service.GetAll());
         }
-        [HttpGet("{id}")]
+        [HttpGet("admin/users/{id}")]
         public IActionResult GetById(int id)
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
-            if (userRole != "Admin") return Forbid();
+            if (userRole != "Admin") return Forbid("Unauthorized");
             UserDto? user = _service.GetById(id);
             if (user is not null) return Ok(user);
             return NotFound("User not found");
@@ -37,8 +36,10 @@ namespace url_shortener.Controllers
         [AllowAnonymous]
         public IActionResult Create([FromBody] UserForCreationDto dto)
         {
+            if (_service.Exists(dto.Email)) return Conflict("Email taken");
             _service.Add(dto);
-            return Ok();
+            UserDto newUser = _service.GetByEmail(dto.Email)!;
+            return Created(newUser.Id.ToString(), newUser);
         }
         [HttpPut]
         public IActionResult Update([FromBody] UserForUpdateDto dto)
@@ -46,9 +47,9 @@ namespace url_shortener.Controllers
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             string email = User.Claims.First(claim => claim.Type.Contains("email")).Value;
             Console.WriteLine(userRole);
-            if (userRole != "Admin" || email != dto.Email) return Forbid();
+            if (userRole != "Admin" && email != dto.Email) return Forbid("Unauthorized");
             _service.Update(dto);
-            return Ok();
+            return NoContent();
         }
         [HttpDelete]
         public IActionResult Delete([FromBody] UserForDeletionDto dto)
@@ -56,10 +57,10 @@ namespace url_shortener.Controllers
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             string email = User.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
             Console.WriteLine("Delete used by:", userRole);
-            if (userRole != "Admin" || email != dto.Email) return Forbid();
+            if (userRole != "Admin" && email != dto.Email) return Forbid("Unauthorized");
             if (!_service.Exists(dto.Email)) return NotFound("User not found");
             _service.Delete(dto);
-            return Ok();
+            return NoContent();
         }
     }
 }

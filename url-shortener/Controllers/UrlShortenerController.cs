@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using url_shortener.Data.Entities;
 using url_shortener.Data.Models.Dtos;
 using url_shortener.Services;
@@ -27,15 +26,16 @@ namespace url_shortener.Controllers
         [HttpGet("admin/urls/{id}")]
         public IActionResult GetUrl(int id)
         {
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
+            if (userRole is not "Admin") return Forbid();
             Url? url = _service.GetById(id);
-            if (url != null)
-                return Ok(url);
+            if (url is not null) return Ok(url);
             return NotFound();
         }
         [HttpGet("urls")]
         public IActionResult GetUserUrls()
         {
-            int userId = Int32.Parse(User.Claims.FirstOrDefault(claim => claim.Type.Contains("nameidentifier"))!.Value);
+            int userId = Int32.Parse(User.Claims.First(claim => claim.Type.Contains("nameidentifier")).Value);
             List<Url> urls = _service.GetByUserId(userId);
             return Ok(urls);
         }
@@ -44,24 +44,24 @@ namespace url_shortener.Controllers
         public IActionResult RedirectToUrl(string code)
         {
             Url? url = _service.GetByCode(code);
-            if (url == null) return NotFound();
+            if (url is null) return NotFound();
             _service.UpdateClicks(url.Id);
             return Redirect(url.FullUrl);
         }
         [HttpPost]
         public IActionResult Shorten([FromBody] UrlForCreationDto url)
         {
-            int userId = Int32.Parse(User.Claims.FirstOrDefault(claim => claim.Type.Contains("nameidentifier"))!.Value);
+            int userId = Int32.Parse(User.Claims.First(claim => claim.Type.Contains("nameidentifier")).Value);
             return Ok(_service.Add(url, userId));
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            string userRole = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)!.Value;
-            int userId = Int32.Parse(User.Claims.FirstOrDefault(claim => claim.Type.Contains("nameidentifier"))!.Value);
+            string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
+            int userId = Int32.Parse(User.Claims.First(claim => claim.Type.Contains("nameidentifier")).Value);
             Url? url = _service.GetById(id);
             if (url is null) return NotFound();
-            if (userRole != "Admin" || userId != url.UserId) return Forbid();
+            if (userRole is not "Admin" && userId != url.UserId) return Forbid();
             return _service.Delete(id) ? Ok() : NotFound();
         }
     }
