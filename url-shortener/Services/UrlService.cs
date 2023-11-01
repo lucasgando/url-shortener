@@ -48,6 +48,13 @@ namespace url_shortener.Services
             _context.SaveChanges();
             return true;
         }
+        public void DeleteByUser(int id)
+        {
+            List<Url> urls = _context.Urls.Where(u => u.UserId == id).ToList();
+            foreach (Url url in urls)
+                _context.Remove(url);
+            _context.SaveChanges();
+        }
         public bool UpdateClicks(int id)
         {
             Url? urlToUpd = GetById(id);

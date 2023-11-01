@@ -8,9 +8,11 @@ namespace url_shortener.Services
     public class UserService
     {
         private readonly UrlShortenerContext _context;
-        public UserService(UrlShortenerContext urlShortenerContext)
+        private readonly UrlService _urlService;
+        public UserService(UrlShortenerContext urlShortenerContext, UrlService urlService)
         {
             _context = urlShortenerContext;
+            _urlService = urlService;
         }
         public IEnumerable<UserDto> GetAll()
         {
@@ -79,6 +81,7 @@ namespace url_shortener.Services
         public void Delete(UserForDeletionDto dto)
         {
             User userToDelete = _context.Users.Single(u => u.Email == dto.Email);
+            _urlService.DeleteByUser(userToDelete.Id);
             _context.Users.Remove(userToDelete);
             _context.SaveChanges();
         }
