@@ -22,7 +22,7 @@ namespace url_shortener.Services
                 Username = u.Username,
                 Email = u.Email,
                 PasswordHash = u.PasswordHash,
-                Role = u.Role,
+                Role = u.Role
             }).ToList();
         }
         public UserDto? GetById(int id)

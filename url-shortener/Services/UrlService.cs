@@ -40,6 +40,28 @@ namespace url_shortener.Services
             _context.SaveChanges();
             return newUrl.Id;
         }
+        public bool Update(int id)
+        { 
+            Url? urlToUpd = GetById(id);
+            if (urlToUpd != null)
+            {
+                urlToUpd.ShortUrl = Shortener.GetShortUrl();
+                _context.Urls.Update(urlToUpd);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool UpdateClicks(int id)
+        {
+            Url? urlToUpd = GetById(id);
+            if (urlToUpd == null) return false;
+            urlToUpd.Clicks++;
+            _context.Urls.Update(urlToUpd);
+            _context.SaveChanges();
+            return true;
+
+        }
         public bool Delete(int id)
         {
             Url? urlToDel = GetById(id);
@@ -54,28 +76,6 @@ namespace url_shortener.Services
             foreach (Url url in urls)
                 _context.Remove(url);
             _context.SaveChanges();
-        }
-        public bool UpdateClicks(int id)
-        {
-            Url? urlToUpd = GetById(id);
-            if (urlToUpd == null) return false;
-            urlToUpd.Clicks++;
-            _context.Urls.Update(urlToUpd);
-            _context.SaveChanges();
-            return true;
-            
-        }
-        public bool Update(int id)
-        { 
-            Url? urlToUpd = GetById(id);
-            if (urlToUpd != null)
-            {
-                urlToUpd.ShortUrl = Shortener.GetShortUrl();
-                _context.Urls.Update(urlToUpd);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
         }
     }
 }

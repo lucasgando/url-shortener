@@ -17,14 +17,14 @@ namespace url_shortener.Controllers
             _service = urlService;
         }
         [HttpGet("admin/urls")]
-        public IActionResult GetUrls()
+        public IActionResult GetAll()
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             if (userRole is not "Admin") return Forbid();
             return Ok(_service.GetAll());
         }
         [HttpGet("admin/urls/{id}")]
-        public IActionResult GetUrl(int id)
+        public IActionResult GetById(int id)
         {
             string userRole = User.Claims.First(claim => claim.Type.Contains("role")).Value;
             if (userRole is not "Admin") return Forbid();
