@@ -1,6 +1,6 @@
 ﻿using url_shortener.Data.Models.Eums;
 
-namespace url_shortener.Data.Models.Dtos
+namespace url_shortener.Data.Models.Dtos.User
 {
     public class UserDto
     {

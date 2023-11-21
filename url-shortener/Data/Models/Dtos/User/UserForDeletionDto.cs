@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace url_shortener.Data.Models.Dtos
+namespace url_shortener.Data.Models.Dtos.User
 {
     public class UserForDeletionDto
     {

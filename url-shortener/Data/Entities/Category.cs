@@ -3,20 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace url_shortener.Data.Entities
 {
-    public class Url
+    public class Category
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
-        [StringLength(500)]
-        public string FullUrl { get; set; }
-        [Required]
-        public string ShortUrl { get; set; }
-        public int Clicks { get; set; } = 1;
+        public string Name { get; set; }
+        public List<Url> Urls { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
-        public List<Category> Categories { get; set; }
+
+        internal Category Include(Func<object, object> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -16,6 +16,49 @@ namespace url_shortener.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
 
+            modelBuilder.Entity("CategoryUrl", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UrlsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CategoriesId", "UrlsId");
+
+                    b.HasIndex("UrlsId");
+
+                    b.ToTable("CategoryUrl");
+                });
+
+            modelBuilder.Entity("url_shortener.Data.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "testcat",
+                            UserId = 1
+                        });
+                });
+
             modelBuilder.Entity("url_shortener.Data.Entities.Url", b =>
                 {
                     b.Property<int>("Id")
@@ -27,6 +70,7 @@ namespace url_shortener.Migrations
 
                     b.Property<string>("FullUrl")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ShortUrl")
@@ -48,7 +92,7 @@ namespace url_shortener.Migrations
                             Id = 1,
                             Clicks = 0,
                             FullUrl = "https://google.com",
-                            ShortUrl = "K6TX7ebl",
+                            ShortUrl = "BftjOQIi",
                             UserId = 1
                         });
                 });
@@ -72,6 +116,7 @@ namespace url_shortener.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -89,17 +134,47 @@ namespace url_shortener.Migrations
                         });
                 });
 
-            modelBuilder.Entity("url_shortener.Data.Entities.Url", b =>
+            modelBuilder.Entity("CategoryUrl", b =>
                 {
-                    b.HasOne("url_shortener.Data.Entities.User", null)
-                        .WithMany("Urls")
-                        .HasForeignKey("UserId")
+                    b.HasOne("url_shortener.Data.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("url_shortener.Data.Entities.Url", null)
+                        .WithMany()
+                        .HasForeignKey("UrlsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("url_shortener.Data.Entities.Category", b =>
+                {
+                    b.HasOne("url_shortener.Data.Entities.User", "User")
+                        .WithMany("Categories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("url_shortener.Data.Entities.Url", b =>
+                {
+                    b.HasOne("url_shortener.Data.Entities.User", "User")
+                        .WithMany("Urls")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("url_shortener.Data.Entities.User", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Urls");
                 });
 #pragma warning restore 612, 618
