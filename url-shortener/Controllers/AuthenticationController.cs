@@ -3,8 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using url_shortener.Data.Entities;
 using url_shortener.Data.Models.Dtos;
+using url_shortener.Data.Models.Dtos.User;
 using url_shortener.Services;
 
 namespace url_shortener.Controllers
@@ -23,7 +23,7 @@ namespace url_shortener.Controllers
         [HttpPost]
         public IActionResult Authenticate([FromBody] CredentialsDto dto)
         {
-            UserDto? user = _service.GetByEmail(dto.Email);
+            UserDto? user = _service.Get(dto.Email);
             if (user is null) return Unauthorized();
             if(!_service.Authenticate(dto.Email, dto.Password)) return Unauthorized();
 
@@ -32,7 +32,7 @@ namespace url_shortener.Controllers
 
             List<Claim> claimsForToken = new List<Claim>();
             // standard claim names
-            claimsForToken.Add(new Claim("sub", user.Id.ToString())); // sub == identity
+            claimsForToken.Add(new Claim("sub", user.Id.ToString())); // sub == nameidentifier
             claimsForToken.Add(new Claim("given_email", user.Email));
             claimsForToken.Add(new Claim("role", user.Role.ToString()));
 
