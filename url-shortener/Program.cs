@@ -47,6 +47,7 @@ namespace url_shortener
             #region Services
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton<UrlService>();
+            builder.Services.AddSingleton<CategoryService>();
             #endregion
 
             builder.Services.AddAuthentication("Bearer")
