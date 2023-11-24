@@ -13,10 +13,5 @@ namespace url_shortener.Data.Entities
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-        internal Category Include(Func<object, object> value)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
